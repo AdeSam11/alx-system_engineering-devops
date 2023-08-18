@@ -1,10 +1,6 @@
-# Fix the nginx requests limit
-exec { 'upgrade':
-  path    => '/bin/',
-  command => 'sed -i "s/15/4096" /etc/default/nginx',
-}
+# Fix Nginx "accept4() failed (24: Too many open files)" message when simulting user requests
 
-exec { 'restart':
-  path    => '/usr/bin/',
-  command => 'service nginx restart',
+exec {'modify max open files limit setting':
+  command => 'sed -i "s/15/10000/" /etc/default/nginx && sudo service nginx restart',
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games',
 }
